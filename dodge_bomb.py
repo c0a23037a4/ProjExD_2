@@ -8,6 +8,7 @@ import pygame as pg
 WIDTH, HEIGHT = 1100, 650
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+
 def check_bound(rct):
     """
     引数で与えられたRectが画面内か外かを判定する
@@ -21,24 +22,22 @@ def check_bound(rct):
         tate = False
     return yoko, tate
 
+
 def game_over_screen(screen): 
     """
     ゲームオーバー画面を表示する関数
     引数：screen
     戻り値：なし
     """
-
     #黒色の半透明の四角の描画
     brack_out = pg.Surface((WIDTH, HEIGHT))
     pg.draw.rect(brack_out, (0), (0, 0, WIDTH, HEIGHT))
     brack_out.set_alpha(200)
     screen.blit(brack_out, [0, 0])
-
     #ゲームオーバーの文字の描画
     font = pg.font.Font(None, 80)
     text = font.render("Game Over", True, (255, 255, 255))
     screen.blit(text, [WIDTH//2-150, HEIGHT//2-50])
-
     #泣いている２匹のこうかとんの描画
     KK_cry_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
     KK_cry_rct = KK_cry_img.get_rect()
@@ -58,8 +57,7 @@ def channge_kk_img(kk_img, key:tuple):
     戻り値：切り替え後のこうかとん画像
     """
     if key == (0, 0): #動いていない場合
-        return kk_img
-    
+        return kk_img    
     else: #動いている場合
         kk_img = pg.image.load("fig/3.png")
         fkk_img = pg.transform.flip(kk_img, True, False)
