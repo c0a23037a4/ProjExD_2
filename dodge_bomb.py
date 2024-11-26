@@ -21,7 +21,12 @@ def check_bound(rct):
         tate = False
     return yoko, tate
 
-def game_over_screen(screen): #ゲームオーバー画面を表示する関数
+def game_over_screen(screen): 
+    """
+    ゲームオーバー画面を表示する関数
+    引数：screen
+    戻り値：なし
+    """
 
     #黒色の半透明の四角の描画
     brack_out = pg.Surface((WIDTH, HEIGHT))
@@ -46,6 +51,22 @@ def game_over_screen(screen): #ゲームオーバー画面を表示する関数
     time.sleep(5)
     return
 
+def channge_kk_img(kk_img, key:tuple): 
+    """
+    飛ぶ方向に従ってこうかとん画像を切り替える関数
+    引数：元のこうかとん画像、方向
+    戻り値：切り替え後のこうかとん画像
+    """
+    if key == (0, 0): #動いていない場合
+        return kk_img
+    
+    else: #動いている場合
+        kk_img = pg.image.load("fig/3.png")
+        fkk_img = pg.transform.flip(kk_img, True, False)
+        kk_imgs_dic = {(-5, 0):pg.transform.rotozoom(kk_img, 0, 0.9), (-5, -5):pg.transform.rotozoom(kk_img, -45, 0.9), (0, -5):pg.transform.rotozoom(fkk_img, 90, 0.9), (5, -5):pg.transform.rotozoom(fkk_img, 45, 0.9), (5, 0):pg.transform.rotozoom(fkk_img, 0, 0.9), (5, 5):pg.transform.rotozoom(fkk_img, -45, 0.9), (0, 5):pg.transform.rotozoom(fkk_img, -90, 0.9), (-5, 5):pg.transform.rotozoom(kk_img, 45, 0.9)}
+        result = kk_imgs_dic[key]
+        return result
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -56,6 +77,7 @@ def main():
     kk_rct.center = 300, 200
     bb_img = pg.Surface((20, 20)) #爆弾用の空のsurface
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
+    bb_img.set_colorkey((0, 0, 0))
     bb_rct = bb_img.get_rect()
     bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     vx, vy = +5, +5
@@ -85,6 +107,7 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+        kk_img = channge_kk_img(kk_img, tuple(sum_mv))
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy) #爆弾動く
         yoko, tate = check_bound(bb_rct)
